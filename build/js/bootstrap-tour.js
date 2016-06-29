@@ -16,7 +16,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- 
+
  * Modified line 511 for BS 3.3.1 bug
  * ========================================================================
  */
@@ -310,9 +310,12 @@
           }).call(_this);
           if (_this._isRedirect(step.host, path, document.location)) {
             _this._redirect(step, i, path);
+            /// HACK
+            /*took out this part of code because it was causing redirect errors to occur in tour
             if (!_this._isJustPathHashDifferent(step.host, path, document.location)) {
               return;
             }
+            */
           }
           if (_this._isOrphan(step)) {
             if (step.orphan === false) {
@@ -479,7 +482,8 @@
     Tour.prototype._isPathDifferent = function(path, currentPath) {
       return this._getPath(path) !== this._getPath(currentPath) || !this._equal(this._getQuery(path), this._getQuery(currentPath)) || !this._equal(this._getHash(path), this._getHash(currentPath));
     };
-
+/// HACK took out this part of code because it was causing redirect errors to occur in tour
+/*
     Tour.prototype._isJustPathHashDifferent = function(host, path, location) {
       var currentPath;
       if (host !== '') {
@@ -493,7 +497,7 @@
       }
       return false;
     };
-
+*/
     Tour.prototype._redirect = function(step, i, path) {
       if ($.isFunction(step.redirect)) {
         return step.redirect.call(this, path);
