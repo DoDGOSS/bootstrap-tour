@@ -265,6 +265,7 @@
             $element = $('body');
           }
           $element.popover('destroy').removeClass("tour-" + _this._options.name + "-element tour-" + _this._options.name + "-" + i + "-element");
+          $element.data('bs.popover', null);
           if (step.reflex) {
             $(step.reflexElement).removeClass('tour-step-element-reflex').off("" + (_this._reflexEvent(step.reflex)) + ".tour-" + _this._options.name);
           }
@@ -308,9 +309,6 @@
           }).call(_this);
           if (_this._isRedirect(step.host, path, document.location)) {
             _this._redirect(step, i, path);
-            if (!_this._isJustPathHashDifferent(step.host, path, document.location)) {
-              return;
-            }
           }
           if (_this._isOrphan(step)) {
             if (step.orphan === false) {
@@ -478,20 +476,6 @@
       return this._getPath(path) !== this._getPath(currentPath) || !this._equal(this._getQuery(path), this._getQuery(currentPath)) || !this._equal(this._getHash(path), this._getHash(currentPath));
     };
 
-    Tour.prototype._isJustPathHashDifferent = function(host, path, location) {
-      var currentPath;
-      if (host !== '') {
-        if (this._isHostDifferent(host, location.href)) {
-          return false;
-        }
-      }
-      currentPath = [location.pathname, location.search, location.hash].join('');
-      if ({}.toString.call(path) === '[object String]') {
-        return this._getPath(path) === this._getPath(currentPath) && this._equal(this._getQuery(path), this._getQuery(currentPath)) && !this._equal(this._getHash(path), this._getHash(currentPath));
-      }
-      return false;
-    };
-
     Tour.prototype._redirect = function(step, i, path) {
       if ($.isFunction(step.redirect)) {
         return step.redirect.call(this, path);
@@ -552,8 +536,7 @@
         html: true,
         animation: step.animation,
         container: step.container,
-        template: step.template,
-        selector: step.element
+        template: step.template
       }).popover('show');
       $tip = $element.data('bs.popover') ? $element.data('bs.popover').tip() : $element.data('popover').tip();
       $tip.attr('id', step.id);
